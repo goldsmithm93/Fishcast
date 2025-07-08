@@ -1,0 +1,1 @@
+console.log('FishCast App Initialized');
