@@ -4,6 +4,7 @@ import { discoverBestBuy } from './bestbuy.js';
 import { discoverTarget } from './target.js';
 import { discoverWalmart } from './walmart.js';
 import { discoverAmazon } from './amazon.js';
+import { discoverCostco } from './costco.js';
 import { mergeProducts } from '../state.js';
 import { log } from '../utils.js';
 
@@ -18,6 +19,7 @@ export async function discoverAll() {
     discoverTarget(sets),
     discoverWalmart(sets),
     discoverAmazon(),
+    discoverCostco(sets),
   ]);
 
   const allProducts = results.flatMap((r, i) => {

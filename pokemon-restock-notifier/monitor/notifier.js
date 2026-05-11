@@ -7,6 +7,8 @@ const SITE_NAMES = {
   'target': 'Target',
   'amazon': 'Amazon',
   'walmart': 'Walmart',
+  'costco-online': 'Costco (Online)',
+  'costco-instore': 'Costco (In Warehouse)',
 };
 
 export async function sendRestock({ name, url, site, price }) {

@@ -3,6 +3,7 @@ import { checkStock as checkBestBuy } from './bestbuy.js';
 import { checkStock as checkTarget } from './target.js';
 import { checkStock as checkAmazon } from './amazon.js';
 import { checkStock as checkWalmart } from './walmart.js';
+import { checkOnlineStock as checkCostcoOnline, checkInstoreStock as checkCostcoInstore } from './costco.js';
 import { getProducts, updateStock } from '../state.js';
 import { sendRestock } from '../notifier.js';
 import { log } from '../utils.js';
@@ -13,6 +14,8 @@ const CHECKERS = {
   'target': checkTarget,
   'amazon': checkAmazon,
   'walmart': checkWalmart,
+  'costco-online': checkCostcoOnline,
+  'costco-instore': checkCostcoInstore,
 };
 
 export async function checkAll() {

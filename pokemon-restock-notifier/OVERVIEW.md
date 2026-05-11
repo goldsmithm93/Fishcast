@@ -16,13 +16,14 @@ Most Pokemon products sell out within minutes of restocking. By the time you not
 
 ## Sites Monitored
 
-| Retailer | Website | Discovery | Stock Checks |
-|----------|---------|-----------|--------------|
-| Pokemon Center | pokemoncenter.com | Yes | Yes |
-| Best Buy | bestbuy.com | Yes (better with API key) | Yes |
-| Target | target.com | Yes | Yes |
-| Walmart | walmart.com | Yes | Yes |
-| Amazon | amazon.com | Manual only* | Yes |
+| Retailer | Website | Discovery | Online | In-Store |
+|----------|---------|-----------|--------|----------|
+| Pokemon Center | pokemoncenter.com | Yes | Yes | — |
+| Best Buy | bestbuy.com | Yes (better with API key) | Yes | — |
+| Target | target.com | Yes | Yes | — |
+| Walmart | walmart.com | Yes | Yes | — |
+| Costco | costco.com | Yes | Yes | Yes (add zip code to .env) |
+| Amazon | amazon.com | Manual only* | Yes | — |
 
 *Amazon aggressively blocks bots so auto-discovery is skipped, but you can paste Amazon product URLs directly into `state.json` and they'll be monitored.
 
