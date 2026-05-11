@@ -1,5 +1,12 @@
 import * as cheerio from 'cheerio';
-import { fetchWithTimeout, BROWSER_HEADERS, generateId, isRelevantProduct, log } from '../utils.js';
+import { fetchWithTimeout, BROWSER_HEADERS, generateId, log } from '../utils.js';
+
+// Less strict than isRelevantProduct — no "pokemon" required since we're already on
+// Pokemon Center's own category pages.
+function isPokemonCenterRelevant(name) {
+  const lower = name.toLowerCase();
+  return lower.includes('booster box') || lower.includes('elite trainer') || lower.includes(' etb');
+}
 
 const CATEGORY_PAGES = [
   'https://www.pokemoncenter.com/category/trading-card-game/booster-boxes',
@@ -32,7 +39,7 @@ export async function discoverPokemonCenter() {
           $(el).closest('[class*="product"]').find('[class*="name"], [class*="title"]').first().text().trim()
         );
 
-        if (name && isRelevantProduct(name)) {
+        if (name && isPokemonCenterRelevant(name)) {
           seen.add(url);
           products.push({ id: generateId('pokemon-center', url), name, url, site: 'pokemon-center' });
         }
