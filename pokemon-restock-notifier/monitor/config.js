@@ -4,5 +4,16 @@ export const DISCOVERY_INTERVAL_MS = parseInt(process.env.DISCOVERY_INTERVAL_MS)
 // How many recent sets to monitor (sorted by newest first)
 export const MAX_SETS_TO_MONITOR = 15;
 
-// Product types to search for per set
-export const PRODUCT_SUFFIXES = ['Elite Trainer Box', 'Booster Box'];
+// Product types to search for per set on retailer sites
+export const PRODUCT_SUFFIXES = [
+  'Elite Trainer Box',
+  'Booster Box',
+  'Booster Bundle',
+  'Blister Pack',
+  'Collection Box',
+  'Premium Collection',
+  'Ultra Premium Collection',
+  'Tin',
+  'Build & Battle Box',
+  'Special Collection',
+];

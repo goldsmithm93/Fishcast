@@ -1,6 +1,6 @@
 # Pokemon Restock Notifier
 
-A tool that watches retail websites 24/7 and sends you an instant Discord message the second a Pokemon booster box or Elite Trainer Box comes back in stock. **New sets are detected automatically** — no config changes needed when a new set drops.
+A tool that watches retail websites 24/7 and sends you an instant Discord message the second any Pokemon TCG product comes back in stock. **New sets and products are detected automatically** — no config changes needed when a new set drops.
 
 ---
 
@@ -39,9 +39,24 @@ Any matching products get added to the monitoring list automatically. You will n
 
 ---
 
-## Products Monitored
+## Product Types Monitored
 
-**On every startup the tool queries pokemontcg.io for the latest sets** — so Ascended Heroes, anything that dropped last week, and every future set are picked up automatically. You never need to update this list.
+The tool searches for every major Pokemon TCG product format across all sites:
+
+| Product Type | Examples |
+|---|---|
+| Booster Box | 36-pack sealed box |
+| Elite Trainer Box (ETB) | 9 packs + accessories |
+| Booster Bundle | 6-pack bundle |
+| Blister Pack | Single/2-pack/3-pack with promo |
+| Collection Box | Character or promo collection |
+| Premium Collection | Larger box sets with promos |
+| Ultra Premium Collection (UPC) | High-end box sets |
+| Special Collection | Limited/themed sets |
+| Tin | Poke Ball tins, character tins |
+| Build & Battle Box | 4 packs + deck-building kit |
+
+**On every startup the tool queries pokemontcg.io for the latest sets** — so Ascended Heroes, anything that dropped last week, and every future set are picked up automatically across all product types above.
 
 The sets below are a built-in backup used only if pokemontcg.io is unreachable on first launch:
 

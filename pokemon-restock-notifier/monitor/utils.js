@@ -22,10 +22,30 @@ export function generateId(site, url) {
   return `${site}-${url.replace(/^https?:\/\/[^/]+/, '').replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').slice(0, 60)}`;
 }
 
+const PRODUCT_KEYWORDS = [
+  'booster box',
+  'booster bundle',
+  'blister pack',
+  'blister',
+  'elite trainer',
+  ' etb',
+  'collection box',
+  'premium collection',
+  'ultra premium collection',
+  'ultra premium',
+  'special collection',
+  'build & battle',
+  'build and battle',
+  ' tin',
+  'gift set',
+  'booster pack',
+];
+
 export function isRelevantProduct(name) {
   const lower = name.toLowerCase();
-  return (lower.includes('booster box') || lower.includes('elite trainer') || lower.includes(' etb')) &&
-    lower.includes('pokemon');
+  const hasPokemon = lower.includes('pokemon') || lower.includes('pokémon');
+  const isCardProduct = PRODUCT_KEYWORDS.some(kw => lower.includes(kw));
+  return hasPokemon && isCardProduct;
 }
 
 export function log(tag, msg) {

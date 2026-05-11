@@ -1,11 +1,6 @@
 import * as cheerio from 'cheerio';
-import { fetchWithTimeout, BROWSER_HEADERS, generateId, log } from '../utils.js';
+import { fetchWithTimeout, BROWSER_HEADERS, generateId, isRelevantProduct, log } from '../utils.js';
 import { PRODUCT_SUFFIXES } from '../config.js';
-
-function isCostcoRelevant(name) {
-  const lower = name.toLowerCase();
-  return lower.includes('booster box') || lower.includes('elite trainer') || lower.includes(' etb');
-}
 
 export async function discoverCostco(sets) {
   const products = [];
@@ -31,7 +26,7 @@ export async function discoverCostco(sets) {
           const nameEl = $(el).closest('[class*="product"]').find('[class*="description"], [class*="title"], h2, h3').first();
           const name = nameEl.text().trim() || href.split('/').pop().replace(/\.product\.\d+\.html$/, '').replace(/-/g, ' ');
 
-          if (!isCostcoRelevant(name)) return;
+          if (!isRelevantProduct(`pokemon ${name}`)) return;
           seen.add(href);
 
           // Always add online entry
