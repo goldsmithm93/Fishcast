@@ -39,20 +39,13 @@ Any matching products get added to the monitoring list automatically. You will n
 
 ---
 
-## Products Pre-Monitored (Scarlet & Violet Era)
+## Products Monitored
 
-- Journey Together
-- Prismatic Evolutions
-- Surging Sparks
-- Stellar Crown
-- Shrouded Fable
-- Twilight Masquerade
-- Temporal Forces
-- Paldean Fates
-- Paradox Rift
-- Obsidian Flames
-- Paldea Evolved
-- Scarlet & Violet Base
+**On every startup the tool queries pokemontcg.io for the latest sets** — so Ascended Heroes, anything that dropped last week, and every future set are picked up automatically. You never need to update this list.
+
+The sets below are a built-in backup used only if pokemontcg.io is unreachable on first launch:
+
+- Journey Together, Prismatic Evolutions, Surging Sparks, Stellar Crown, Shrouded Fable, Twilight Masquerade, Temporal Forces, Paldean Fates, Paradox Rift, Obsidian Flames, Paldea Evolved, Scarlet & Violet Base
 
 ---
 
