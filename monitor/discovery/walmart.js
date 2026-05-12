@@ -9,15 +9,19 @@ export async function discoverWalmart(sets) {
     for (const suffix of PRODUCT_SUFFIXES) {
       const query = `Pokemon ${set.name} ${suffix}`;
       try {
-        // Use Walmart's internal JSON search API instead of scraping HTML
-        const url = `https://www.walmart.com/search/api?query=${encodeURIComponent(query)}&cat_id=0&sort=best_match&page=1&affinityOverride=default&rawFacets=&facet=&pref=&prg=desktop`;
+        // Walmart's internal search API — used by their own site, returns JSON
+        const url = `https://www.walmart.com/search/api?query=${encodeURIComponent(query)}&cat_id=0&sort=best_match&page=1&prg=desktop`;
         const res = await fetchWithTimeout(url, {
           headers: {
             'Accept': 'application/json',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-            'Referer': 'https://www.walmart.com/',
+            'Referer': `https://www.walmart.com/search?q=${encodeURIComponent(query)}`,
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
           },
         });
+
         if (!res.ok) {
           log('Discovery/Walmart', `HTTP ${res.status} for "${query}"`);
           continue;
@@ -31,7 +35,12 @@ export async function discoverWalmart(sets) {
           continue;
         }
 
-        const items = data?.items ?? data?.searchResult?.items ?? data?.payload?.searchData?.paginatedV2?.props?.initialData?.searchResult?.itemStacks?.[0]?.items ?? [];
+        // Try multiple known response shapes
+        const items =
+          data?.items ??
+          data?.searchResult?.items ??
+          data?.payload?.searchData?.paginatedV2?.props?.initialData?.searchResult?.itemStacks?.[0]?.items ??
+          [];
 
         for (const item of items) {
           const name = item.name ?? item.title ?? '';

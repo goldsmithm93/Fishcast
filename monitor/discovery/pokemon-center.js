@@ -1,56 +1,53 @@
-import * as cheerio from 'cheerio';
 import { fetchWithTimeout, BROWSER_HEADERS, generateId, log } from '../utils.js';
 
-const CATEGORY_PAGES = [
-  'https://www.pokemoncenter.com/category/trading-card-game/booster-boxes',
-  'https://www.pokemoncenter.com/category/trading-card-game/elite-trainer-boxes',
-  'https://www.pokemoncenter.com/category/trading-card-game/blister-packs',
-  'https://www.pokemoncenter.com/category/trading-card-game/collections',
-  'https://www.pokemoncenter.com/category/trading-card-game/special-collections',
-  'https://www.pokemoncenter.com/category/trading-card-game/tins',
-  'https://www.pokemoncenter.com/category/trading-card-game/booster-bundles',
+const CATEGORIES = [
+  'booster-boxes',
+  'elite-trainer-boxes',
+  'blister-packs',
+  'collections',
+  'special-collections',
+  'tins',
+  'booster-bundles',
 ];
 
 export async function discoverPokemonCenter() {
   const products = [];
   const seen = new Set();
 
-  for (const pageUrl of CATEGORY_PAGES) {
+  for (const category of CATEGORIES) {
     try {
-      const res = await fetchWithTimeout(pageUrl, { headers: BROWSER_HEADERS });
-      if (!res.ok) {
-        log('Discovery/PokémonCenter', `HTTP ${res.status} for ${pageUrl}`);
-        continue;
-      }
-      const html = await res.text();
-      const $ = cheerio.load(html);
-
-      // Match /product/ or /en-us/product/ paths
-      $('a[href*="/product/"], a[href*="/en-us/product/"]').each((_, el) => {
-        const href = $(el).attr('href');
-        if (!href) return;
-        const url = href.startsWith('http') ? href : `https://www.pokemoncenter.com${href}`;
-        if (seen.has(url)) return;
-        seen.add(url);
-
-        const name = (
-          $(el).text().trim() ||
-          $(el).find('img').attr('alt') ||
-          $(el).closest('[class*="product"]').find('[class*="name"], [class*="title"]').first().text().trim() ||
-          href.split('/').pop().replace(/-/g, ' ')
-        );
-
-        products.push({ id: generateId('pokemon-center', url), name, url, site: 'pokemon-center' });
+      // Use Pokemon Center's internal SFCC catalog API — returns JSON, no scraping needed
+      const url = `https://www.pokemoncenter.com/api/catalog/en-us/product-catalog?q=&sz=48&start=0&format=page-element&srule=best-sellers&pmid=tcg-${category}`;
+      const res = await fetchWithTimeout(url, {
+        headers: {
+          ...BROWSER_HEADERS,
+          'Accept': 'application/json, text/javascript, */*',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Referer': `https://www.pokemoncenter.com/category/trading-card-game/${category}`,
+        },
       });
 
-      const category = pageUrl.split('/').pop();
-      log('Discovery/PokémonCenter', `${products.length} products so far (checked ${category})`);
-
-      if (products.length === 0 && html.length < 5000) {
-        log('Discovery/PokémonCenter', `Short response (${html.length} bytes) — possible bot block on ${category}`);
+      if (!res.ok) {
+        log('Discovery/PokémonCenter', `HTTP ${res.status} for ${category}`);
+        continue;
       }
+
+      const data = await res.json();
+      const hits = data?.hits ?? data?.productSearchResult?.hits ?? [];
+
+      for (const hit of hits) {
+        const productUrl = hit.productUrl
+          ? (hit.productUrl.startsWith('http') ? hit.productUrl : `https://www.pokemoncenter.com${hit.productUrl}`)
+          : null;
+        if (!productUrl || seen.has(productUrl)) continue;
+        seen.add(productUrl);
+        const name = hit.productName ?? hit.name ?? productUrl.split('/').pop().replace(/-/g, ' ');
+        products.push({ id: generateId('pokemon-center', productUrl), name, url: productUrl, site: 'pokemon-center' });
+      }
+
+      log('Discovery/PokémonCenter', `${products.length} products so far (checked ${category})`);
     } catch (err) {
-      log('Discovery/PokémonCenter', `Failed on ${pageUrl.split('/').pop()}: ${err.message}`);
+      log('Discovery/PokémonCenter', `Failed on ${category}: ${err.message}`);
     }
   }
 
